@@ -9,7 +9,7 @@ class NoteAPI {
         return notes.add(note)
     }
 
-    fun listAllNotes(): Any {
+    fun listAllNotes(): String {
         return if (notes.isEmpty()){
             "No note is stored"
         }else{
@@ -17,6 +17,7 @@ class NoteAPI {
             for (i in notes.indices){
                 listofNotes +="${i}:${notes[i]} \n"
             }
+            listofNotes
         }
     }
 }
