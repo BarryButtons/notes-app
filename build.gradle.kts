@@ -18,6 +18,11 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:3.0.0")
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     implementation("org.slf4j:slf4j-simple:2.0.3")
+    implementation("junit:junit:4.13.1")
+    implementation("junit:junit:4.13.1")
+    implementation("junit:junit:4.13.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
 }
 
