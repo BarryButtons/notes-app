@@ -1,8 +1,13 @@
 package controllers
 
-import models.Note
 
-class NoteAPI {
+import models.Note
+import persistence.Serializer
+
+class NoteAPI(serializerType: Serializer){
+
+    private var serializer: Serializer = serializerType
+
     private var notes = ArrayList<Note>()
 
     fun add(note: Note): Boolean{
@@ -121,4 +126,16 @@ class NoteAPI {
             notes.removeAt(indexToDelete)
         } else null
     }
+
+    @Throws(Exception::class)
+    fun load() {
+        notes = serializer.read() as ArrayList<Note>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(notes)
+    }
+
+
 }

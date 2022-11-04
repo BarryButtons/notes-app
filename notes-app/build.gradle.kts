@@ -23,6 +23,9 @@ dependencies {
     implementation("junit:junit:4.13.1")
     implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    //For Streaming to XML and JSON
+    implementation("com.thoughtworks.xstream:xstream:1.4.19")
+    implementation("org.codehaus.jettison:jettison:1.5.1")
 
 }
 
