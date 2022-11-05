@@ -4,6 +4,8 @@ import models.Note
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import persistence.XMLSerializer
+import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -14,16 +16,16 @@ class NoteAPITest {
     private var codeApp: Note? = null
     private var testApp: Note? = null
     private var swim: Note? = null
-    private var populatedNotes: NoteAPI? = NoteAPI()
-    private var emptyNotes: NoteAPI? = NoteAPI()
+    private var populatedNotes: NoteAPI? = NoteAPI(XMLSerializer(File("notes.xml")))
+    private var emptyNotes: NoteAPI? = NoteAPI(XMLSerializer(File("notes.xml")))
 
     @BeforeEach
     fun setup(){
-        learnKotlin = Note("Learning Kotlin", 5, "College", false)
-        summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false)
-        codeApp = Note("Code App", 4, "Work", true)
-        testApp = Note("Test App", 4, "Work", false)
-        swim = Note("Swim - Pool", 3, "Hobby", true)
+        learnKotlin = Note("Learning Kotlin", "its hard",5, "College", false)
+        summerHoliday = Note("Summer Holiday to France","itll be nice", 1, "Holiday", false)
+        codeApp = Note("Code App","i don't want to", 4, "Work", true)
+        testApp = Note("Test App","if i must", 4, "Work", false)
+        swim = Note("Swim - Pool","i hope i don't drown", 3, "Hobby", true)
 
         //adding 5 Note to the notes api
         populatedNotes!!.add(learnKotlin!!)
@@ -48,7 +50,7 @@ class NoteAPITest {
     inner class AddNotes {
         @Test
         fun `adding a Note to a populated list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false)
+            val newNote = Note("Study Lambdas", "if i must",1, "College", false)
             assertEquals(5, populatedNotes!!.numberOfNotes())
             assertTrue(populatedNotes!!.add(newNote))
             assertEquals(6, populatedNotes!!.numberOfNotes())
@@ -57,7 +59,7 @@ class NoteAPITest {
 
         @Test
         fun `adding a Note to an empty list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false)
+            val newNote = Note("Study Lambdas", "if i must",1, "College", false)
             assertEquals(0, emptyNotes!!.numberOfNotes())
             assertTrue(emptyNotes!!.add(newNote))
             assertEquals(1, emptyNotes!!.numberOfNotes())
@@ -184,5 +186,35 @@ class NoteAPITest {
             assertEquals(3, populatedNotes!!.numberOfNotes())
         }
     }
+    @Nested
+    inner class CountingMethods {
 
+        @Test
+        fun numberOfNotesCalculatedCorrectly() {
+            assertEquals(5, populatedNotes!!.numberOfNotes())
+            assertEquals(0, emptyNotes!!.numberOfNotes())
+        }
+
+        @Test
+        fun numberOfArchivedNotesCalculatedCorrectly() {
+            assertEquals(2, populatedNotes!!.numberOfArchivedNotes())
+            assertEquals(0, emptyNotes!!.numberOfArchivedNotes())
+        }
+
+        @Test
+        fun numberOfActiveNotesCalculatedCorrectly() {
+            assertEquals(3, populatedNotes!!.numberOfActiveNotes())
+            assertEquals(0, emptyNotes!!.numberOfActiveNotes())
+        }
+
+        @Test
+        fun numberOfNotesByPriorityCalculatedCorrectly() {
+            assertEquals(1, populatedNotes!!.numberOfNotesByPriority(1))
+            assertEquals(0, populatedNotes!!.numberOfNotesByPriority(2))
+            assertEquals(1, populatedNotes!!.numberOfNotesByPriority(3))
+            assertEquals(2, populatedNotes!!.numberOfNotesByPriority(4))
+            assertEquals(1, populatedNotes!!.numberOfNotesByPriority(5))
+            assertEquals(0, emptyNotes!!.numberOfNotesByPriority(1))
+        }
+    }
 }
