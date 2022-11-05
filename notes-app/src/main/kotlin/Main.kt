@@ -3,9 +3,12 @@ import models.Note
 import mu.KotlinLogging
 import persistence.JSONSerializer
 import persistence.XMLSerializer
+import utils.CategoryUtility
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import utils.ValidateInput.readValidCategory
+import utils.ValidateInput.readValidPriority
 import java.io.File
 import java.lang.System.exit
 
@@ -19,21 +22,22 @@ fun main(args: Array<String>) {
 
 fun mainMenu() : Int {
     return ScannerInput.readNextInt(""" 
-         > ----------------------------------
-         > |        NOTE KEEPER APP         |
-         > ----------------------------------
-         > | NOTE MENU                      |
-         > |   1) Add a note                |
-         > |   2) List notes                |
-         > |   3) Update a note             |
-         > |   4) Delete a note             |
-         > |   5) Archive a note            |
-         > ----------------------------------
-         > |   20) Save notes               |
-         > |   21) Load notes               |
-         > ----------------------------------
-         > |   0) Exit                      |
-         > ----------------------------------
+         >-------------------------------------
+         > |          NOTE KEEPER APP          |
+         > -------------------------------------
+         > | NOTE MENU                         |
+         > |   1) Add a note                   |
+         > |   2) List notes                   |
+         > |   3) Update a note                |
+         > |   4) Delete a note                |
+         > |   5) Archive a note               |
+         > |   6) Search note                  |
+         > -------------------------------------
+         > |   20) Save notes                  |
+         > |   21) Load notes                  |
+         > -------------------------------------
+         > |   0) Exit                         |
+         > -------------------------------------
          > ==>> """.trimMargin(">"))
 }
 
@@ -46,6 +50,7 @@ fun runMenu() {
             3  -> updateNote()
             4  -> deleteNote()
             5 -> archiveNote()
+            6 -> searchAllNotes()
             20  -> save()
             21  -> load()
             0  -> exitApp()
@@ -57,9 +62,9 @@ fun runMenu() {
 fun addNote(){
     //logger.info { "addNote() function invoked" }
     val noteTitle = readNextLine("Enter a title for the note: ")
-    val briefDescription = readNextLine("Enter brief description")
-    val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-    val noteCategory = readNextLine("Enter a category for the note: ")
+    val briefDescription = readNextLine("Enter brief description:")
+    val notePriority = readValidPriority("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+    val noteCategory = readValidCategory("Enter a category for the note from ${CategoryUtility.categories}: ")
     val isAdded = noteAPI.add(Note(noteTitle,briefDescription, notePriority, noteCategory, false))
 
     if (isAdded) {
@@ -89,6 +94,27 @@ fun listNotes(){
     } else {
         println("Option Invalid - No notes stored");
     }
+}
+
+fun searchAllNotes(){
+    if (noteAPI.numberOfNotes()>0){
+        val option = readNextInt(
+            """
+                  > --------------------------------
+                  > |   1) Search by Description   |
+                  > |   2) Search by Priority      |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+        when (option) {
+            1 -> searchNotes();
+            else -> println("Invalid option");
+        }
+    } else{
+        println ("Option Invalid - No Notes Stored")
+    }
+
+
+
 }
 
 fun listAllNotes() {
@@ -156,6 +182,16 @@ fun archiveNote() {
         }
     }
 }
+fun searchNotes() {
+    val searchTitle = readNextLine("Enter the description to search by: ")
+    val searchResults = noteAPI.searchByTitle(searchTitle)
+    if (searchResults.isEmpty()) {
+        println("No notes found")
+    } else {
+        println(searchResults)
+    }
+}
+
 
 fun save() {
     try {
@@ -177,3 +213,4 @@ fun exitApp(){
     logger.info { "exitApp() function invoked" }
     exit(0)
 }
+
