@@ -2,7 +2,6 @@ import controllers.NoteAPI
 import models.Note
 import mu.KotlinLogging
 import persistence.JSONSerializer
-import persistence.XMLSerializer
 import utils.CategoryUtility
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
@@ -192,6 +191,15 @@ fun searchNotes() {
     }
 }
 
+/*fun searchNotePriority() {
+    val searchPriority = readNextInt("Enter the priority to search by: ")
+    val searchResults = noteAPI.searchByPri(searchPriority)
+    if (searchResults.isEmpty()) {
+        println("No notes found")
+    } else {
+        println(searchResults)
+    }
+}*/
 
 fun save() {
     try {

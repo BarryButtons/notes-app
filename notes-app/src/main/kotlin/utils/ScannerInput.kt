@@ -77,4 +77,10 @@ object ScannerInput {
         print(prompt)
         return Scanner(System.`in`).next()[0]
     }
+
+    //@JvmStatic
+    //fun readNextInt(prompt: Int?): Int {
+    //  print(prompt)
+    // return Scanner(System.`in`).next()[0].code
+    //}
 }
